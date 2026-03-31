@@ -243,24 +243,23 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
                       {/* Inner glow */}
                       <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover/fab:opacity-100 transition-opacity"></div>
                       
-                      {/* Sparkle effect on hover */}
+                      {/* Animated border shine on hover */}
                       <motion.div
-                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full opacity-0 group-hover/fab:opacity-100"
-                        animate={{
-                          scale: [0, 1.5, 0],
-                          opacity: [0, 1, 0]
-                        }}
-                        transition={{
-                          duration: 1.5,
-                          repeat: Infinity,
-                          ease: "easeOut"
-                        }}
-                      />
+                        className="absolute inset-0 opacity-0 group-hover/fab:opacity-100"
+                        initial={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                      >
+                        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white to-transparent"></div>
+                        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
+                      </motion.div>
 
-                      {/* Icon with rotation */}
+                      {/* Icon with rotation and scale */}
                       <motion.div
                         className="relative z-10 p-1.5 bg-white/20 backdrop-blur-sm rounded-lg"
-                        animate={{ rotate: showFABMenu ? 45 : 0 }}
+                        animate={{ 
+                          rotate: showFABMenu ? 45 : 0,
+                        }}
+                        whileHover={{ scale: 1.1 }}
                         transition={{ duration: 0.3, type: "spring" }}
                       >
                         <Plus className="w-5 h-5 text-white drop-shadow-lg" strokeWidth={3} />
@@ -269,19 +268,24 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
                       {/* Text with enhanced styling */}
                       <span className="relative z-10 text-base font-bold text-white drop-shadow-md tracking-wide">Create</span>
                       
-                      {/* Pulse indicator */}
+                      {/* Subtle arrow indicator on hover */}
                       <motion.div
-                        className="relative z-10 w-2 h-2 bg-white rounded-full"
-                        animate={{
-                          scale: [1, 1.3, 1],
-                          opacity: [0.8, 1, 0.8]
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut"
-                        }}
-                      />
+                        className="relative z-10 overflow-hidden w-0 group-hover/fab:w-4 transition-all duration-300"
+                        initial={{ width: 0 }}
+                      >
+                        <motion.div
+                          animate={{
+                            x: [0, 3, 0]
+                          }}
+                          transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        >
+                          <ChevronRight className="w-4 h-4 text-white/80" strokeWidth={3} />
+                        </motion.div>
+                      </motion.div>
                     </div>
                   </motion.button>
                 </div>
