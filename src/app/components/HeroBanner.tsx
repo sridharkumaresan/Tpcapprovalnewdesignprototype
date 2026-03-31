@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Search, FileCheck, CheckSquare, GraduationCap, Plus, FileText, List, X, ChevronRight, TrendingUp, Cloud, CloudRain, Sun } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Search, FileCheck, CheckSquare, GraduationCap, Plus, FileText, List, X, ChevronRight, TrendingUp, Cloud, CloudRain, Sun, Sunrise, Moon, Star } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'motion/react';
 import { CreateTPCModal } from './CreateTPCModal';
@@ -8,26 +8,99 @@ interface HeroBannerProps {
   onScrollChange?: (isScrolled: boolean) => void;
 }
 
+type TimeOfDay = 'morning' | 'afternoon' | 'evening';
+
+interface GreetingConfig {
+  text: string;
+  icon: React.ReactNode;
+  gradientFrom: string;
+  gradientTo: string;
+  iconColor: string;
+  glowColor: string;
+}
+
 export function HeroBanner({ onScrollChange }: HeroBannerProps) {
   const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showFABMenu, setShowFABMenu] = useState(false);
+  const [timeOfDay, setTimeOfDay] = useState<TimeOfDay>('morning');
+  const onScrollChangeRef = useRef(onScrollChange);
 
+  // Keep ref up to date
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollThreshold = 50;
-      const shouldBeScrolled = window.scrollY > scrollThreshold;
-      
-      if (shouldBeScrolled !== isScrolled) {
-        setIsScrolled(shouldBeScrolled);
-        onScrollChange?.(shouldBeScrolled);
+    onScrollChangeRef.current = onScrollChange;
+  }, [onScrollChange]);
+
+  // Determine time of day
+  useEffect(() => {
+    const updateTimeOfDay = () => {
+      const hour = new Date().getHours();
+      if (hour >= 5 && hour < 12) {
+        setTimeOfDay('morning');
+      } else if (hour >= 12 && hour < 18) {
+        setTimeOfDay('afternoon');
+      } else {
+        setTimeOfDay('evening');
       }
     };
     
+    updateTimeOfDay();
+    // Update every minute
+    const interval = setInterval(updateTimeOfDay, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const greetingConfig: Record<TimeOfDay, GreetingConfig> = {
+    morning: {
+      text: 'Good morning',
+      icon: <Sunrise className="w-10 h-10" strokeWidth={2} />,
+      gradientFrom: '#FF6B35',
+      gradientTo: '#FFC837',
+      iconColor: '#FF8C42',
+      glowColor: 'rgba(255, 140, 66, 0.4)'
+    },
+    afternoon: {
+      text: 'Good afternoon',
+      icon: <Sun className="w-10 h-10" strokeWidth={2} />,
+      gradientFrom: '#FFD700',
+      gradientTo: '#FFA500',
+      iconColor: '#FFD700',
+      glowColor: 'rgba(255, 215, 0, 0.4)'
+    },
+    evening: {
+      text: 'Good evening',
+      icon: <Moon className="w-10 h-10" strokeWidth={2} />,
+      gradientFrom: '#667EEA',
+      gradientTo: '#9D7BEA',
+      iconColor: '#A78BFA',
+      glowColor: 'rgba(167, 139, 250, 0.4)'
+    }
+  };
+
+  const config = greetingConfig[timeOfDay];
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollThreshold = 100;
+      const currentScroll = window.scrollY;
+      
+      // Add hysteresis to prevent flickering
+      if (!isScrolled && currentScroll > scrollThreshold) {
+        setIsScrolled(true);
+        onScrollChangeRef.current?.(true);
+      } else if (isScrolled && currentScroll <= scrollThreshold - 20) {
+        setIsScrolled(false);
+        onScrollChangeRef.current?.(false);
+      }
+    };
+    
+    // Initial check
+    handleScroll();
+    
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [isScrolled, onScrollChange]);
+  }, [isScrolled]);
 
   return (
     <div className={`w-full sticky top-[45px] z-50 transition-all duration-500 ease-in-out bg-gradient-to-br from-[#00AEEF] to-[#005DB5] ${
@@ -131,12 +204,256 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
 
             {/* Main Heading */}
             <div className="text-center mb-5">
-              <h1 className="text-2xl sm:text-3xl font-bold text-white mb-1">
-                Good morning, Sabina
-              </h1>
-              <p className="text-sm sm:text-base text-white/90">
-                Welcome to Colleague Direct, how can we help you today?
-              </p>
+              <div className="relative inline-block">
+                {/* Animated gradient backdrop - more subtle */}
+                <motion.div
+                  className="absolute -inset-8 rounded-full opacity-15 blur-3xl"
+                  style={{
+                    background: `radial-gradient(circle, ${config.gradientFrom}, ${config.gradientTo})`
+                  }}
+                  animate={{
+                    scale: [1, 1.15, 1],
+                    opacity: [0.15, 0.25, 0.15]
+                  }}
+                  transition={{
+                    duration: 5,
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
+                />
+
+                <div className="relative flex items-center justify-center gap-3">
+                  {/* Animated Icon Container - smaller and inline */}
+                  <motion.div
+                    className="relative flex-shrink-0"
+                    initial={{ scale: 0, rotate: -180 }}
+                    animate={{ scale: 1, rotate: 0 }}
+                    transition={{
+                      type: "spring",
+                      stiffness: 180,
+                      damping: 12
+                    }}
+                  >
+                    {/* Floating particles - positioned around icon */}
+                    {timeOfDay === 'morning' && (
+                      <>
+                        {[...Array(6)].map((_, i) => (
+                          <motion.div
+                            key={i}
+                            className="absolute w-1 h-1 rounded-full top-1/2 left-1/2"
+                            style={{
+                              background: config.iconColor,
+                            }}
+                            animate={{
+                              x: [0, (Math.cos((i * 60) * Math.PI / 180) * 35)],
+                              y: [0, (Math.sin((i * 60) * Math.PI / 180) * 35)],
+                              opacity: [0, 1, 0],
+                              scale: [0, 1.2, 0]
+                            }}
+                            transition={{
+                              duration: 2.5,
+                              repeat: Infinity,
+                              delay: i * 0.2,
+                              ease: "easeOut"
+                            }}
+                          />
+                        ))}
+                      </>
+                    )}
+
+                    {timeOfDay === 'evening' && (
+                      <>
+                        {/* Stars around moon - tighter positioning */}
+                        {[...Array(4)].map((_, i) => (
+                          <motion.div
+                            key={i}
+                            className="absolute"
+                            style={{
+                              left: `${-10 + i * 35}%`,
+                              top: i % 2 === 0 ? '0%' : '80%'
+                            }}
+                            animate={{
+                              opacity: [0.3, 1, 0.3],
+                              scale: [0.8, 1.2, 0.8],
+                              rotate: [0, 180, 360]
+                            }}
+                            transition={{
+                              duration: 2.5,
+                              repeat: Infinity,
+                              delay: i * 0.3
+                            }}
+                          >
+                            <Star className="w-2.5 h-2.5" fill={config.iconColor} color={config.iconColor} />
+                          </motion.div>
+                        ))}
+                      </>
+                    )}
+
+                    {/* Icon glow effect */}
+                    <motion.div
+                      className="absolute -inset-1 rounded-full blur-xl"
+                      style={{ backgroundColor: config.glowColor }}
+                      animate={{
+                        scale: [1, 1.3, 1],
+                        opacity: [0.4, 0.6, 0.4]
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    />
+                    
+                    {/* Icon background circle - compact */}
+                    <div
+                      className="relative p-3 rounded-full backdrop-blur-md border-2 border-white/50 shadow-xl"
+                      style={{
+                        background: `linear-gradient(135deg, ${config.gradientFrom}50, ${config.gradientTo}50)`
+                      }}
+                    >
+                      {/* Inner shine effect */}
+                      <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/40 via-transparent to-transparent"></div>
+                      
+                      <motion.div
+                        className="relative z-10"
+                        style={{ color: config.iconColor, filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.2))' }}
+                        animate={
+                          timeOfDay === 'afternoon' 
+                            ? { rotate: 360 }
+                            : timeOfDay === 'evening'
+                            ? { rotate: [0, -5, 5, -5, 0] }
+                            : { y: [0, -2, 0] }
+                        }
+                        transition={
+                          timeOfDay === 'afternoon'
+                            ? { duration: 20, repeat: Infinity, ease: "linear" }
+                            : timeOfDay === 'evening'
+                            ? { duration: 6, repeat: Infinity, ease: "easeInOut" }
+                            : { duration: 2.5, repeat: Infinity, ease: "easeInOut" }
+                        }
+                      >
+                        {React.cloneElement(config.icon as React.ReactElement, { className: 'w-7 h-7' })}
+                      </motion.div>
+                    </div>
+
+                    {/* Afternoon rays - tighter to icon */}
+                    {timeOfDay === 'afternoon' && (
+                      <>
+                        {[...Array(8)].map((_, i) => (
+                          <motion.div
+                            key={i}
+                            className="absolute top-1/2 left-1/2 w-0.5 h-2 origin-bottom rounded-full"
+                            style={{
+                              background: config.iconColor,
+                              transform: `rotate(${i * 45}deg) translateY(-28px)`,
+                              opacity: 0.5
+                            }}
+                            animate={{
+                              opacity: [0.3, 0.6, 0.3],
+                              height: ['8px', '11px', '8px']
+                            }}
+                            transition={{
+                              duration: 2,
+                              repeat: Infinity,
+                              delay: i * 0.1
+                            }}
+                          />
+                        ))}
+                      </>
+                    )}
+                  </motion.div>
+
+                  {/* Compact Text Container - single line */}
+                  <motion.div
+                    className="text-left"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.2, type: "spring", stiffness: 100 }}
+                    key={timeOfDay}
+                  >
+                    {/* Greeting and name on same line */}
+                    <div className="flex items-baseline gap-2 mb-2">
+                      <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-none">
+                        {config.text}, 
+                      </h1>
+                      
+                      {/* Name with underline */}
+                      <div className="relative inline-block">
+                        <h1 className="text-2xl sm:text-3xl font-bold text-white tracking-tight leading-none">
+                          Sabina
+                        </h1>
+                        
+                        {/* Animated underline with gradient */}
+                        <motion.div
+                          className="absolute -bottom-0.5 left-0 h-0.5 rounded-full"
+                          style={{ 
+                            background: `linear-gradient(90deg, ${config.iconColor}, ${config.gradientTo})`,
+                          }}
+                          initial={{ width: 0 }}
+                          animate={{ width: '100%' }}
+                          transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
+                        />
+                      </div>
+
+                      {/* Decorative sparkle - inline with name */}
+                      <motion.div
+                        className="relative -top-1"
+                        initial={{ scale: 0, rotate: -45 }}
+                        animate={{ scale: 1, rotate: 0 }}
+                        transition={{ delay: 0.6, type: "spring" }}
+                      >
+                        <motion.div
+                          animate={{
+                            rotate: [0, 180, 360],
+                            scale: [1, 1.15, 1]
+                          }}
+                          transition={{
+                            duration: 4,
+                            repeat: Infinity,
+                            ease: "easeInOut"
+                          }}
+                        >
+                          <Star className="w-4 h-4" fill={config.iconColor} color={config.iconColor} opacity={0.7} />
+                        </motion.div>
+                      </motion.div>
+                    </div>
+
+                    {/* Compact welcome message with time */}
+                    <motion.div
+                      className="flex items-center gap-2 flex-wrap"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: 0.4 }}
+                    >
+                      <p className="text-sm text-white/90 font-medium">
+                        Welcome to Colleague Direct
+                      </p>
+
+                      {/* Separator */}
+                      <div className="w-1 h-1 rounded-full bg-white/40"></div>
+
+                      {/* Compact time badge */}
+                      <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-white/15 backdrop-blur-sm border border-white/20">
+                        <motion.div
+                          className="w-1 h-1 rounded-full"
+                          style={{ backgroundColor: config.iconColor }}
+                          animate={{
+                            scale: [1, 1.4, 1],
+                            opacity: [0.6, 1, 0.6]
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity
+                          }}
+                        />
+                        <span className="text-xs text-white/90 font-medium">
+                          {new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })}
+                        </span>
+                      </div>
+                    </motion.div>
+                  </motion.div>
+                </div>
+              </div>
             </div>
 
             {/* Search Box with Create Button */}
@@ -205,16 +522,16 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
                   </AnimatePresence>
 
                   <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
                     onClick={() => setShowFABMenu(!showFABMenu)}
                     className="relative group/fab"
                   >
                     {/* Animated glow effect */}
                     <motion.div 
-                      className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#00aeef] via-purple-500 to-[#006de3] opacity-0 group-hover/fab:opacity-100 blur-xl transition-opacity duration-500"
+                      className="absolute inset-0 rounded-full bg-gradient-to-r from-[#00aeef] via-purple-500 to-[#006de3] opacity-0 group-hover/fab:opacity-100 blur-xl transition-opacity duration-500"
                       animate={{ 
-                        scale: [1, 1.1, 1],
+                        scale: [1, 1.2, 1],
                       }}
                       transition={{ 
                         duration: 2,
@@ -224,7 +541,7 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
                     ></motion.div>
                     
                     {/* Shimmer effect */}
-                    <div className="absolute inset-0 rounded-2xl overflow-hidden">
+                    <div className="absolute inset-0 rounded-full overflow-hidden">
                       <motion.div
                         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
                         animate={{
@@ -238,54 +555,44 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
                       />
                     </div>
 
-                    {/* Main button */}
-                    <div className="relative px-6 py-3.5 bg-gradient-to-r from-[#00aeef] to-[#006de3] rounded-2xl shadow-2xl flex items-center gap-3 overflow-hidden group-hover/fab:shadow-[0_0_30px_rgba(0,174,239,0.5)] transition-all duration-300">
+                    {/* Main button - Icon only circular */}
+                    <div className="relative w-16 h-16 bg-gradient-to-br from-[#00aeef] to-[#006de3] rounded-full shadow-2xl flex items-center justify-center overflow-hidden group-hover/fab:shadow-[0_0_40px_rgba(0,174,239,0.6)] transition-all duration-300">
                       {/* Inner glow */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover/fab:opacity-100 transition-opacity"></div>
+                      <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-transparent opacity-50"></div>
                       
-                      {/* Animated border shine on hover */}
+                      {/* Animated ring on hover */}
                       <motion.div
-                        className="absolute inset-0 opacity-0 group-hover/fab:opacity-100"
-                        initial={{ opacity: 0 }}
+                        className="absolute inset-0 rounded-full border-2 border-white/50 opacity-0 group-hover/fab:opacity-100"
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        whileHover={{ scale: 1, opacity: 1 }}
                         transition={{ duration: 0.3 }}
-                      >
-                        <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white to-transparent"></div>
-                        <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/50 to-transparent"></div>
-                      </motion.div>
+                      />
 
-                      {/* Icon with rotation and scale */}
+                      {/* Icon with rotation */}
                       <motion.div
-                        className="relative z-10 p-1.5 bg-white/20 backdrop-blur-sm rounded-lg"
+                        className="relative z-10"
                         animate={{ 
                           rotate: showFABMenu ? 45 : 0,
                         }}
-                        whileHover={{ scale: 1.1 }}
-                        transition={{ duration: 0.3, type: "spring" }}
+                        transition={{ duration: 0.3, type: "spring", stiffness: 200 }}
                       >
-                        <Plus className="w-5 h-5 text-white drop-shadow-lg" strokeWidth={3} />
+                        <Plus className="w-8 h-8 text-white drop-shadow-lg" strokeWidth={2.5} />
                       </motion.div>
                       
-                      {/* Text with enhanced styling */}
-                      <span className="relative z-10 text-base font-bold text-white drop-shadow-md tracking-wide">Create</span>
-                      
-                      {/* Subtle arrow indicator on hover */}
+                      {/* Pulse ring effect */}
                       <motion.div
-                        className="relative z-10 overflow-hidden w-0 group-hover/fab:w-4 transition-all duration-300"
-                        initial={{ width: 0 }}
-                      >
-                        <motion.div
-                          animate={{
-                            x: [0, 3, 0]
-                          }}
-                          transition={{
-                            duration: 1.5,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                          }}
-                        >
-                          <ChevronRight className="w-4 h-4 text-white/80" strokeWidth={3} />
-                        </motion.div>
-                      </motion.div>
+                        className="absolute inset-0 rounded-full border-2 border-white"
+                        initial={{ scale: 1, opacity: 0.5 }}
+                        animate={{
+                          scale: [1, 1.4],
+                          opacity: [0.5, 0]
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeOut"
+                        }}
+                      />
                     </div>
                   </motion.button>
                 </div>
@@ -300,19 +607,29 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
                 onClick={() => navigate('/tpc')}
-                className="group relative overflow-hidden bg-gradient-to-br from-[#e3000f] to-[#b20110] rounded-xl p-5 text-left hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-2xl"
+                className="group relative overflow-hidden backdrop-blur-md border-2 border-white/30 rounded-xl p-4 text-left hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-2xl hover:border-white/50"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(227, 0, 15, 0.85), rgba(178, 1, 16, 0.85))'
+                }}
               >
-                <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors"></div>
+                {/* Frosted glass overlay */}
+                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+                
+                {/* Inner glow effect on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
                 <div className="relative flex items-start justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-3">
-                      <FileCheck className="w-5 h-5 text-white/80" />
-                      <span className="text-xs font-semibold text-white/80 uppercase tracking-wide">Approvals</span>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="p-1.5 bg-white/20 rounded-lg border border-white/30 backdrop-blur-sm">
+                        <FileCheck className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-xs font-semibold text-white uppercase tracking-wide">Approvals</span>
                     </div>
-                    <div className="text-2xl font-bold text-white mb-1">7 overdue!</div>
-                    <div className="text-sm text-white/80">7 in total</div>
+                    <div className="text-2xl font-bold text-white mb-1 drop-shadow-md">7 overdue!</div>
+                    <div className="text-sm text-white/90">7 in total</div>
                   </div>
-                  <ChevronRight className="w-6 h-6 text-white/60 group-hover:text-white group-hover:translate-x-1 transition-all mt-1" />
+                  <ChevronRight className="w-6 h-6 text-white/70 group-hover:text-white group-hover:translate-x-1 transition-all mt-1" />
                 </div>
               </motion.button>
 
@@ -321,19 +638,29 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 }}
-                className="group relative overflow-hidden bg-gradient-to-br from-[#ff6b35] to-[#d84315] rounded-xl p-5 text-left hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-2xl"
+                className="group relative overflow-hidden backdrop-blur-md border-2 border-white/30 rounded-xl p-4 text-left hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-2xl hover:border-white/50"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.85), rgba(216, 67, 21, 0.85))'
+                }}
               >
-                <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors"></div>
+                {/* Frosted glass overlay */}
+                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+                
+                {/* Inner glow effect on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
                 <div className="relative flex items-start justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-3">
-                      <CheckSquare className="w-5 h-5 text-white/80" />
-                      <span className="text-xs font-semibold text-white/80 uppercase tracking-wide">Tasks</span>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="p-1.5 bg-white/20 rounded-lg border border-white/30 backdrop-blur-sm">
+                        <CheckSquare className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-xs font-semibold text-white uppercase tracking-wide">Tasks</span>
                     </div>
-                    <div className="text-2xl font-bold text-white mb-1">5 due today</div>
-                    <div className="text-sm text-white/80">5 in total</div>
+                    <div className="text-2xl font-bold text-white mb-1 drop-shadow-md">5 due today</div>
+                    <div className="text-sm text-white/90">5 in total</div>
                   </div>
-                  <ChevronRight className="w-6 h-6 text-white/60 group-hover:text-white group-hover:translate-x-1 transition-all mt-1" />
+                  <ChevronRight className="w-6 h-6 text-white/70 group-hover:text-white group-hover:translate-x-1 transition-all mt-1" />
                 </div>
               </motion.button>
 
@@ -342,19 +669,29 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="group relative overflow-hidden bg-gradient-to-br from-[#003057] to-[#001f3f] rounded-xl p-5 text-left hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-2xl"
+                className="group relative overflow-hidden backdrop-blur-md border-2 border-white/30 rounded-xl p-4 text-left hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-2xl hover:border-white/50"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 48, 87, 0.85), rgba(0, 31, 63, 0.85))'
+                }}
               >
-                <div className="absolute inset-0 bg-white/0 group-hover:bg-white/10 transition-colors"></div>
+                {/* Frosted glass overlay */}
+                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+                
+                {/* Inner glow effect on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
                 <div className="relative flex items-start justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-3">
-                      <GraduationCap className="w-5 h-5 text-white/80" />
-                      <span className="text-xs font-semibold text-white/80 uppercase tracking-wide">Learning</span>
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="p-1.5 bg-white/20 rounded-lg border border-white/30 backdrop-blur-sm">
+                        <GraduationCap className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="text-xs font-semibold text-white uppercase tracking-wide">Learning</span>
                     </div>
-                    <div className="text-2xl font-bold text-white mb-1">3 to complete</div>
-                    <div className="text-sm text-white/80">View mandatory training</div>
+                    <div className="text-2xl font-bold text-white mb-1 drop-shadow-md">3 to complete</div>
+                    <div className="text-sm text-white/90">View mandatory training</div>
                   </div>
-                  <ChevronRight className="w-6 h-6 text-white/60 group-hover:text-white group-hover:translate-x-1 transition-all mt-1" />
+                  <ChevronRight className="w-6 h-6 text-white/70 group-hover:text-white group-hover:translate-x-1 transition-all mt-1" />
                 </div>
               </motion.button>
             </div>
