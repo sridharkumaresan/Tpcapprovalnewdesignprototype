@@ -80,27 +80,37 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
 
   const config = greetingConfig[timeOfDay];
 
+  // Notify parent of scroll changes (separate effect to avoid render-phase updates)
+  useEffect(() => {
+    onScrollChangeRef.current?.(isScrolled);
+  }, [isScrolled]);
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollThreshold = 100;
       const currentScroll = window.scrollY;
       
-      // Add hysteresis to prevent flickering
-      if (!isScrolled && currentScroll > scrollThreshold) {
-        setIsScrolled(true);
-        onScrollChangeRef.current?.(true);
-      } else if (isScrolled && currentScroll <= scrollThreshold - 20) {
-        setIsScrolled(false);
-        onScrollChangeRef.current?.(false);
-      }
+      setIsScrolled(prev => {
+        // Add hysteresis to prevent flickering
+        if (!prev && currentScroll > scrollThreshold) {
+          return true;
+        } else if (prev && currentScroll <= scrollThreshold - 20) {
+          return false;
+        }
+        return prev;
+      });
     };
     
-    // Initial check
-    handleScroll();
-    
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [isScrolled]);
+    
+    // Run once on mount (after a delay to avoid render-phase update)
+    const timer = setTimeout(handleScroll, 0);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearTimeout(timer);
+    };
+  }, []); // Empty dependency array - only set up once
 
   return (
     <div className={`w-full sticky top-[45px] z-50 transition-all duration-500 ease-in-out bg-gradient-to-br from-[#00AEEF] to-[#005DB5] ${
@@ -783,16 +793,57 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => navigate('/tpc')}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/10 backdrop-blur-sm hover:bg-white/20 border border-white/20 text-white rounded-lg text-xs font-medium transition-colors"
+                className="relative overflow-hidden backdrop-blur-md border-2 border-white/30 rounded-lg px-2.5 py-1.5 text-white transition-all hover:scale-105 hover:border-white/50 shadow-md hover:shadow-lg group"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(227, 0, 15, 0.85), rgba(178, 1, 16, 0.85))'
+                }}
               >
-                <FileCheck className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">7 Approvals</span>
-                <span className="sm:hidden">7</span>
+                {/* Frosted glass overlay */}
+                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+                
+                {/* Inner glow on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div className="relative flex items-center gap-1.5">
+                  <FileCheck className="w-4 h-4" />
+                  <span className="text-sm font-bold">7</span>
+                </div>
               </button>
-              <button className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/10 backdrop-blur-sm hover:bg-white/20 border border-white/20 text-white rounded-lg text-xs font-medium transition-colors">
-                <CheckSquare className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">5 Tasks</span>
-                <span className="sm:hidden">5</span>
+
+              <button
+                className="relative overflow-hidden backdrop-blur-md border-2 border-white/30 rounded-lg px-2.5 py-1.5 text-white transition-all hover:scale-105 hover:border-white/50 shadow-md hover:shadow-lg group"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(255, 107, 53, 0.85), rgba(216, 67, 21, 0.85))'
+                }}
+              >
+                {/* Frosted glass overlay */}
+                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+                
+                {/* Inner glow on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div className="relative flex items-center gap-1.5">
+                  <CheckSquare className="w-4 h-4" />
+                  <span className="text-sm font-bold">5</span>
+                </div>
+              </button>
+
+              <button
+                className="relative overflow-hidden backdrop-blur-md border-2 border-white/30 rounded-lg px-2.5 py-1.5 text-white transition-all hover:scale-105 hover:border-white/50 shadow-md hover:shadow-lg group"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(0, 48, 87, 0.85), rgba(0, 31, 63, 0.85))'
+                }}
+              >
+                {/* Frosted glass overlay */}
+                <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+                
+                {/* Inner glow on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/0 via-white/10 to-white/0 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                
+                <div className="relative flex items-center gap-1.5">
+                  <GraduationCap className="w-4 h-4" />
+                  <span className="text-sm font-bold">3</span>
+                </div>
               </button>
             </div>
           </div>
