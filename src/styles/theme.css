@@ -218,4 +218,75 @@
   ::-webkit-scrollbar-thumb:hover {
     background: rgba(0, 0, 0, 0.3);
   }
+
+  /* Trade icons drift animations */
+  @keyframes drift-1 {
+    0% { transform: translateX(-100px); opacity: 0; }
+    10% { opacity: 0.4; }
+    90% { opacity: 0.4; }
+    100% { transform: translateX(1700px); opacity: 0; }
+  }
+
+  @keyframes drift-2 {
+    0% { transform: translateX(-80px); opacity: 0; }
+    10% { opacity: 0.35; }
+    90% { opacity: 0.35; }
+    100% { transform: translateX(1700px); opacity: 0; }
+  }
+
+  @keyframes drift-3 {
+    0% { transform: translateX(-120px); opacity: 0; }
+    10% { opacity: 0.3; }
+    90% { opacity: 0.3; }
+    100% { transform: translateX(1700px); opacity: 0; }
+  }
+
+  @keyframes drift-4 {
+    0% { transform: translateX(-60px); opacity: 0; }
+    10% { opacity: 0.38; }
+    90% { opacity: 0.38; }
+    100% { transform: translateX(1700px); opacity: 0; }
+  }
+
+  @keyframes drift-5 {
+    0% { transform: translateX(-90px); opacity: 0; }
+    10% { opacity: 0.36; }
+    90% { opacity: 0.36; }
+    100% { transform: translateX(1700px); opacity: 0; }
+  }
+
+  @keyframes drift-6 {
+    0% { transform: translateX(-110px); opacity: 0; }
+    10% { opacity: 0.32; }
+    90% { opacity: 0.32; }
+    100% { transform: translateX(1700px); opacity: 0; }
+  }
+
+  @keyframes drift-7 {
+    0% { transform: translateX(-70px); opacity: 0; }
+    10% { opacity: 0.33; }
+    90% { opacity: 0.33; }
+    100% { transform: translateX(1700px); opacity: 0; }
+  }
+
+  @keyframes drift-8 {
+    0% { transform: translateX(-130px); opacity: 0; }
+    10% { opacity: 0.34; }
+    90% { opacity: 0.34; }
+    100% { transform: translateX(1700px); opacity: 0; }
+  }
+
+  @keyframes drift-9 {
+    0% { transform: translateX(-50px); opacity: 0; }
+    10% { opacity: 0.37; }
+    90% { opacity: 0.37; }
+    100% { transform: translateX(1700px); opacity: 0; }
+  }
+
+  @keyframes drift-10 {
+    0% { transform: translateX(-140px); opacity: 0; }
+    10% { opacity: 0.31; }
+    90% { opacity: 0.31; }
+    100% { transform: translateX(1700px); opacity: 0; }
+  }
 }

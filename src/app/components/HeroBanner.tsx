@@ -92,11 +92,17 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 }}
-                className="flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-full"
+                className="flex items-center gap-3 px-4 py-2.5 bg-white/20 backdrop-blur-md border border-white/30 rounded-full shadow-lg hover:bg-white/25 transition-all group"
               >
-                <Cloud className="w-5 h-5 text-white" />
-                <span className="text-white font-semibold">22°C</span>
-                <span className="text-white/90 text-sm">Mostly cloudy</span>
+                <div className="relative">
+                  <Cloud className="w-5 h-5 text-yellow-300 drop-shadow-lg" />
+                  <div className="absolute -top-1 -right-1 w-2 h-2 bg-yellow-400 rounded-full opacity-70"></div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-white font-bold text-lg">22°C</span>
+                  <div className="h-4 w-px bg-white/40"></div>
+                  <span className="text-white/95 text-sm font-medium">Mostly cloudy</span>
+                </div>
               </motion.div>
 
               {/* Stock Ticker - Top Right */}
@@ -104,11 +110,22 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.1 }}
-                className="flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-md border border-white/30 rounded-full"
+                className="flex items-center gap-3 px-4 py-2.5 bg-white/20 backdrop-blur-md border border-white/30 rounded-full shadow-lg hover:bg-white/25 transition-all group"
               >
-                <TrendingUp className="w-5 h-5 text-white" />
-                <span className="text-white font-bold">222.22</span>
-                <span className="text-white/90 text-sm">BARC.L</span>
+                <div className="relative">
+                  <TrendingUp className="w-5 h-5 text-green-400 drop-shadow-lg" />
+                  <motion.div
+                    className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-green-300 rounded-full"
+                    animate={{ scale: [1, 1.3, 1], opacity: [1, 0.5, 1] }}
+                    transition={{ duration: 2, repeat: Infinity }}
+                  ></motion.div>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-white font-bold text-lg">222.22</span>
+                  <span className="text-green-300 text-xs font-semibold">+2.5%</span>
+                  <div className="h-4 w-px bg-white/40"></div>
+                  <span className="text-white/95 text-sm font-medium">BARC.L</span>
+                </div>
               </motion.div>
             </div>
 
@@ -158,9 +175,9 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
                             setShowFABMenu(false);
                             setShowCreateModal(true);
                           }}
-                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gradient-to-r hover:from-[#00aeef] hover:to-[#006de3] hover:text-white transition-all group/item border-b border-gray-100"
+                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#00aeef] hover:text-white transition-all group/item border-b border-gray-100"
                         >
-                          <div className="p-2 bg-gradient-to-br from-[#00aeef] to-[#006de3] rounded-lg group-hover/item:scale-110 transition-transform">
+                          <div className="p-2 bg-[#00aeef] rounded-lg group-hover/item:scale-110 transition-transform">
                             <FileText className="w-5 h-5 text-white" />
                           </div>
                           <div className="text-left flex-1">
@@ -173,9 +190,9 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
                             setShowFABMenu(false);
                             // Handle MBL creation
                           }}
-                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-gradient-to-r hover:from-[#00aeef] hover:to-[#006de3] hover:text-white transition-all group/item"
+                          className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#00aeef] hover:text-white transition-all group/item"
                         >
-                          <div className="p-2 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg group-hover/item:scale-110 transition-transform">
+                          <div className="p-2 bg-orange-500 rounded-lg group-hover/item:scale-110 transition-transform">
                             <List className="w-5 h-5 text-white" />
                           </div>
                           <div className="text-left flex-1">
@@ -193,15 +210,78 @@ export function HeroBanner({ onScrollChange }: HeroBannerProps) {
                     onClick={() => setShowFABMenu(!showFABMenu)}
                     className="relative group/fab"
                   >
-                    <div className="absolute inset-0 bg-white/20 rounded-xl blur-sm opacity-0 group-hover/fab:opacity-100 transition-opacity"></div>
-                    <div className="relative px-5 py-3 bg-white rounded-xl shadow-xl flex items-center gap-2 hover:shadow-2xl transition-shadow">
+                    {/* Animated glow effect */}
+                    <motion.div 
+                      className="absolute inset-0 rounded-2xl bg-gradient-to-r from-[#00aeef] via-purple-500 to-[#006de3] opacity-0 group-hover/fab:opacity-100 blur-xl transition-opacity duration-500"
+                      animate={{ 
+                        scale: [1, 1.1, 1],
+                      }}
+                      transition={{ 
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut"
+                      }}
+                    ></motion.div>
+                    
+                    {/* Shimmer effect */}
+                    <div className="absolute inset-0 rounded-2xl overflow-hidden">
                       <motion.div
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                        animate={{
+                          x: ['-200%', '200%']
+                        }}
+                        transition={{
+                          duration: 3,
+                          repeat: Infinity,
+                          ease: "linear"
+                        }}
+                      />
+                    </div>
+
+                    {/* Main button */}
+                    <div className="relative px-6 py-3.5 bg-gradient-to-r from-[#00aeef] to-[#006de3] rounded-2xl shadow-2xl flex items-center gap-3 overflow-hidden group-hover/fab:shadow-[0_0_30px_rgba(0,174,239,0.5)] transition-all duration-300">
+                      {/* Inner glow */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 opacity-0 group-hover/fab:opacity-100 transition-opacity"></div>
+                      
+                      {/* Sparkle effect on hover */}
+                      <motion.div
+                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 bg-white rounded-full opacity-0 group-hover/fab:opacity-100"
+                        animate={{
+                          scale: [0, 1.5, 0],
+                          opacity: [0, 1, 0]
+                        }}
+                        transition={{
+                          duration: 1.5,
+                          repeat: Infinity,
+                          ease: "easeOut"
+                        }}
+                      />
+
+                      {/* Icon with rotation */}
+                      <motion.div
+                        className="relative z-10 p-1.5 bg-white/20 backdrop-blur-sm rounded-lg"
                         animate={{ rotate: showFABMenu ? 45 : 0 }}
-                        transition={{ duration: 0.3 }}
+                        transition={{ duration: 0.3, type: "spring" }}
                       >
-                        <Plus className="w-5 h-5 text-[#00aeef]" strokeWidth={3} />
+                        <Plus className="w-5 h-5 text-white drop-shadow-lg" strokeWidth={3} />
                       </motion.div>
-                      <span className="text-sm font-semibold text-[#00aeef]">Create</span>
+                      
+                      {/* Text with enhanced styling */}
+                      <span className="relative z-10 text-base font-bold text-white drop-shadow-md tracking-wide">Create</span>
+                      
+                      {/* Pulse indicator */}
+                      <motion.div
+                        className="relative z-10 w-2 h-2 bg-white rounded-full"
+                        animate={{
+                          scale: [1, 1.3, 1],
+                          opacity: [0.8, 1, 0.8]
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut"
+                        }}
+                      />
                     </div>
                   </motion.button>
                 </div>

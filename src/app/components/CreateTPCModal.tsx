@@ -496,7 +496,7 @@ export function CreateTPCModal({ isOpen, onClose, onSubmit }: CreateTPCModalProp
                 disabled={!isStepValid()}
                 className={`flex items-center gap-2 px-6 py-2 rounded-xl font-semibold transition-all ${
                   isStepValid()
-                    ? 'bg-gradient-to-r from-[#00aeef] to-[#006de3] text-white hover:shadow-lg'
+                    ? 'bg-[#00aeef] hover:bg-[#006de3] text-white hover:shadow-lg'
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
               >

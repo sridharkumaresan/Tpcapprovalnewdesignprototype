@@ -46,14 +46,14 @@ export function TPCDetailsPanel({ data, isOpen, onClose, onApprove, onDeny }: TP
 
           {/* Panel */}
           <motion.div
-            className="fixed right-0 top-0 h-full w-full max-w-2xl bg-white shadow-2xl z-50 overflow-y-auto"
+            className="fixed right-0 top-0 h-full w-full max-w-2xl bg-white shadow-2xl z-50 flex flex-col"
             initial={{ x: '100%' }}
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 30, stiffness: 300 }}
           >
             {/* Header */}
-            <div className="sticky top-0 bg-white border-b border-gray-200 px-8 py-6 z-10">
+            <div className="sticky top-0 bg-white border-b border-gray-200 px-8 py-6 z-10 shrink-0">
               <div className="flex items-center justify-between">
                 <h2 className="text-2xl font-bold text-gray-900">Trade Pre-Clearance Details</h2>
                 <button
@@ -65,7 +65,8 @@ export function TPCDetailsPanel({ data, isOpen, onClose, onApprove, onDeny }: TP
               </div>
             </div>
 
-            <div className="px-8 py-6 space-y-8">
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto px-8 py-6 space-y-8">
               {/* Employee Information */}
               <section>
                 <h3 className="text-lg font-semibold text-gray-900 mb-4 flex items-center gap-2">
@@ -170,30 +171,7 @@ export function TPCDetailsPanel({ data, isOpen, onClose, onApprove, onDeny }: TP
                 </div>
               </section>
 
-              {/* Action Panel */}
-              {mode === 'view' && (
-                <section>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-4">Actions</h3>
-                  <div className="flex gap-3">
-                    <button
-                      onClick={() => setMode('approve')}
-                      className="flex-1 px-6 py-3 bg-gradient-to-r from-[#09821f] to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl font-medium transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-                    >
-                      <CheckCircle2 className="w-5 h-5" />
-                      Approve
-                    </button>
-                    <button
-                      onClick={() => setMode('deny')}
-                      className="flex-1 px-6 py-3 bg-gradient-to-r from-[#e3000f] to-[#b20110] hover:from-[#b20110] hover:to-[#8a0000] text-white rounded-xl font-medium transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-                    >
-                      <XCircle className="w-5 h-5" />
-                      Deny
-                    </button>
-                  </div>
-                </section>
-              )}
-
-              {/* Approval Panel */}
+              {/* Approval Panel (when in approve mode) */}
               {mode === 'approve' && (
                 <motion.section
                   initial={{ opacity: 0, y: 20 }}
@@ -238,26 +216,11 @@ export function TPCDetailsPanel({ data, isOpen, onClose, onApprove, onDeny }: TP
                         placeholder="Add any additional notes..."
                       />
                     </div>
-
-                    <div className="flex gap-3 pt-2">
-                      <button
-                        onClick={handleApprove}
-                        className="flex-1 px-6 py-3 bg-gradient-to-r from-[#09821f] to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl font-medium transition-all shadow-lg hover:shadow-xl"
-                      >
-                        Confirm Approval
-                      </button>
-                      <button
-                        onClick={() => setMode('view')}
-                        className="px-6 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors"
-                      >
-                        Cancel
-                      </button>
-                    </div>
                   </div>
                 </motion.section>
               )}
 
-              {/* Denial Panel */}
+              {/* Denial Panel (when in deny mode) */}
               {mode === 'deny' && (
                 <motion.section
                   initial={{ opacity: 0, y: 20 }}
@@ -300,24 +263,66 @@ export function TPCDetailsPanel({ data, isOpen, onClose, onApprove, onDeny }: TP
                         placeholder="Please provide detailed explanation for denial..."
                       />
                     </div>
-
-                    <div className="flex gap-3 pt-2">
-                      <button
-                        onClick={handleDeny}
-                        disabled={!denialReason || !comment}
-                        className="flex-1 px-6 py-3 bg-gradient-to-r from-[#e3000f] to-[#b20110] hover:from-[#b20110] hover:to-[#8a0000] text-white rounded-xl font-medium transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        Confirm Denial
-                      </button>
-                      <button
-                        onClick={() => setMode('view')}
-                        className="px-6 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors"
-                      >
-                        Cancel
-                      </button>
-                    </div>
                   </div>
                 </motion.section>
+              )}
+            </div>
+
+            {/* Fixed Footer with Action Buttons */}
+            <div className="shrink-0 border-t border-gray-200 bg-white px-8 py-6">
+              {mode === 'view' && (
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setMode('approve')}
+                    className="flex-1 px-6 py-3 bg-[#09821f] hover:bg-green-700 text-white rounded-xl font-medium transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                  >
+                    <CheckCircle2 className="w-5 h-5" />
+                    Approve
+                  </button>
+
+                  <button
+                    onClick={() => setMode('deny')}
+                    className="flex-1 px-6 py-3 bg-[#e3000f] hover:bg-[#b20110] text-white rounded-xl font-medium transition-all shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                  >
+                    <XCircle className="w-5 h-5" />
+                    Deny
+                  </button>
+                </div>
+              )}
+
+              {mode === 'approve' && (
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleApprove}
+                    className="flex-1 px-6 py-3 bg-[#09821f] hover:bg-green-700 text-white rounded-xl font-medium transition-all shadow-lg hover:shadow-xl"
+                  >
+                    Confirm Approval
+                  </button>
+                  <button
+                    onClick={() => setMode('view')}
+                    className="px-6 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
+
+              {mode === 'deny' && (
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleDeny}
+                    disabled={!denialReason || !comment}
+                    className="flex-1 px-6 py-3 bg-[#e3000f] hover:bg-[#b20110] text-white rounded-xl font-medium transition-all shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    Confirm Denial
+                  </button>
+                  <button
+                    onClick={() => setMode('view')}
+                    className="px-6 py-3 border border-gray-300 hover:bg-gray-50 text-gray-700 rounded-xl font-medium transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
               )}
             </div>
           </motion.div>

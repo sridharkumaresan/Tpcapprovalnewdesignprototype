@@ -149,8 +149,101 @@ export function TPCView() {
       <SharePointHeader />
 
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-[#006de3] via-[#00aeef] to-[#0099cc] text-white">
-        <div className="max-w-[1600px] mx-auto px-4 sm:px-8 py-8 sm:py-12">
+      <div className="bg-gradient-to-br from-[#006de3] via-[#00aeef] to-[#0099cc] text-white relative overflow-hidden">
+        {/* Animated Trade Icons Background with Swirl Mask */}
+        <div className="absolute inset-0 w-full h-full">
+          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 300" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              {/* Gradient definitions for icons */}
+              <linearGradient id="iconGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#ffffff" stopOpacity="0.2" />
+                <stop offset="100%" stopColor="#ffffff" stopOpacity="0.08" />
+              </linearGradient>
+              <linearGradient id="iconGradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#e0f7ff" stopOpacity="0.25" />
+                <stop offset="100%" stopColor="#c7f0ff" stopOpacity="0.1" />
+              </linearGradient>
+              <linearGradient id="iconGradient3" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#d4f1d4" stopOpacity="0.22" />
+                <stop offset="100%" stopColor="#b8e6b8" stopOpacity="0.08" />
+              </linearGradient>
+              
+              {/* Swirl Mask Definition - Static Wave Shape */}
+              <clipPath id="swirlClip">
+                <path d="M-100,0 Q200,40 400,0 T800,0 Q1000,40 1200,0 T1700,0 L1700,300 Q1500,260 1200,300 T800,300 Q600,260 400,300 T-100,300 Z" />
+              </clipPath>
+            </defs>
+
+            {/* Icons Group with Clip Applied */}
+            <g clipPath="url(#swirlClip)">
+              {/* Trending Up Icon 1 */}
+              <g className="animate-[drift-1_22s_linear_infinite]" opacity="0">
+                <path d="M8 18L12 14L16 18L22 10" stroke="url(#iconGradient2)" strokeWidth="2.5" fill="none" strokeLinecap="round" transform="translate(0, 45)" />
+                <path d="M18 10H22V14" stroke="url(#iconGradient2)" strokeWidth="2.5" fill="none" strokeLinecap="round" transform="translate(0, 45)" />
+              </g>
+
+              {/* Dollar Sign 1 */}
+              <g className="animate-[drift-2_26s_linear_infinite]" opacity="0">
+                <circle cx="15" cy="130" r="13" stroke="url(#iconGradient1)" strokeWidth="2" fill="none" />
+                <path d="M15 118V142M11 123H18C18.8 123 20 123.5 20 125.5C20 127.5 18.8 128 18 128H11M11 128H19C19.8 128 21 128.5 21 130.5C21 132.5 19.8 133 19 133H11" stroke="url(#iconGradient1)" strokeWidth="2" fill="none" strokeLinecap="round" />
+              </g>
+
+              {/* Briefcase Icon */}
+              <g className="animate-[drift-3_24s_linear_infinite]" opacity="0">
+                <rect x="6" y="210" width="20" height="14" rx="2" stroke="url(#iconGradient3)" strokeWidth="2" fill="none" />
+                <path d="M9 210V206C9 205.4 9.4 205 10 205H16C16.6 205 17 205.4 17 206V210" stroke="url(#iconGradient3)" strokeWidth="2" fill="none" strokeLinecap="round" />
+                <path d="M6 217H26" stroke="url(#iconGradient3)" strokeWidth="2" />
+              </g>
+
+              {/* Trending Down Icon */}
+              <g className="animate-[drift-4_28s_linear_infinite]" opacity="0">
+                <path d="M22 18L16 12L12 16L6 10" stroke="url(#iconGradient1)" strokeWidth="2.5" fill="none" strokeLinecap="round" transform="translate(0, 75)" />
+                <path d="M22 12V18H16" stroke="url(#iconGradient1)" strokeWidth="2.5" fill="none" strokeLinecap="round" transform="translate(0, 75)" />
+              </g>
+
+              {/* Pie Chart Icon */}
+              <g className="animate-[drift-5_25s_linear_infinite]" opacity="0">
+                <circle cx="15" cy="170" r="11" stroke="url(#iconGradient2)" strokeWidth="2" fill="none" />
+                <path d="M15 159V170L23 164" stroke="url(#iconGradient2)" strokeWidth="2" fill="none" strokeLinecap="round" />
+              </g>
+
+              {/* Bar Chart Icon */}
+              <g className="animate-[drift-6_23s_linear_infinite]" opacity="0">
+                <rect x="8" y="60" width="4" height="10" rx="1.5" stroke="url(#iconGradient3)" strokeWidth="1" fill="url(#iconGradient3)" />
+                <rect x="15" y="55" width="4" height="15" rx="1.5" stroke="url(#iconGradient3)" strokeWidth="1" fill="url(#iconGradient3)" />
+                <rect x="22" y="57" width="4" height="13" rx="1.5" stroke="url(#iconGradient3)" strokeWidth="1" fill="url(#iconGradient3)" />
+              </g>
+
+              {/* Dollar Sign 2 - Different position */}
+              <g className="animate-[drift-7_27s_linear_infinite]" opacity="0">
+                <circle cx="15" cy="235" r="13" stroke="url(#iconGradient2)" strokeWidth="2" fill="none" />
+                <path d="M15 223V247M11 228H18C18.8 228 20 228.5 20 230.5C20 232.5 18.8 233 18 233H11M11 233H19C19.8 233 21 233.5 21 235.5C21 237.5 19.8 238 19 238H11" stroke="url(#iconGradient2)" strokeWidth="2" fill="none" strokeLinecap="round" />
+              </g>
+
+              {/* Activity/Monitor Icon */}
+              <g className="animate-[drift-8_29s_linear_infinite]" opacity="0">
+                <path d="M6 112L11 107L16 112L26 100" stroke="url(#iconGradient1)" strokeWidth="2.5" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="26" cy="100" r="2.5" fill="url(#iconGradient1)" />
+              </g>
+
+              {/* Trending Up Icon 2 - Higher position */}
+              <g className="animate-[drift-9_30s_linear_infinite]" opacity="0">
+                <path d="M8 18L12 14L16 18L22 10" stroke="url(#iconGradient3)" strokeWidth="2.5" fill="none" strokeLinecap="round" transform="translate(0, 185)" />
+                <path d="M18 10H22V14" stroke="url(#iconGradient3)" strokeWidth="2.5" fill="none" strokeLinecap="round" transform="translate(0, 185)" />
+              </g>
+
+              {/* Candlestick Icon */}
+              <g className="animate-[drift-10_31s_linear_infinite]" opacity="0">
+                <rect x="10" y="147" width="5" height="10" stroke="url(#iconGradient2)" strokeWidth="1.5" fill="url(#iconGradient2)" />
+                <line x1="12.5" y1="142" x2="12.5" y2="162" stroke="url(#iconGradient2)" strokeWidth="2" />
+                <rect x="20" y="145" width="5" height="12" stroke="url(#iconGradient2)" strokeWidth="1.5" fill="url(#iconGradient2)" />
+                <line x1="22.5" y1="140" x2="22.5" y2="165" stroke="url(#iconGradient2)" strokeWidth="2" />
+              </g>
+            </g>
+          </svg>
+        </div>
+
+        <div className="max-w-[1600px] mx-auto px-4 sm:px-8 py-8 sm:py-12 relative z-10">
           <button
             onClick={() => navigate('/')}
             className="flex items-center gap-2 text-white/90 hover:text-white mb-4 sm:mb-6 transition-colors group"
@@ -193,14 +286,14 @@ export function TPCView() {
               onClick={() => setStatusFilter('all')}
               className={`flex items-center gap-3 sm:gap-4 p-3 rounded-xl transition-all duration-300 ${
                 statusFilter === 'all' 
-                  ? 'bg-gradient-to-br from-[#00aeef] to-[#006de3] shadow-lg scale-105' 
+                  ? 'bg-[#00aeef] shadow-lg scale-105' 
                   : 'hover:bg-gray-50 hover:scale-105'
               }`}
             >
-              <div className={`p-2 sm:p-3 rounded-xl shrink-0 ${
+              <div className={`w-12 sm:w-14 h-12 sm:h-14 rounded-xl flex items-center justify-center shrink-0 shadow-md ${
                 statusFilter === 'all'
                   ? 'bg-white/20'
-                  : 'bg-gradient-to-br from-[#00aeef] to-[#006de3]'
+                  : 'bg-[#00aeef]'
               }`}>
                 <svg className="w-5 sm:w-6 h-5 sm:h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -380,7 +473,7 @@ export function TPCView() {
               <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
                 <button
                   onClick={handleBulkApprove}
-                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#09821f] to-green-700 hover:from-green-700 hover:to-green-800 text-white rounded-xl text-sm font-medium transition-all shadow-lg hover:shadow-xl"
+                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-[#09821f] hover:bg-green-700 text-white rounded-xl text-sm font-medium transition-all shadow-lg hover:shadow-xl"
                 >
                   <CheckCircle2 className="w-4 sm:w-5 h-4 sm:h-5" />
                   <span>Approve</span>
@@ -388,7 +481,7 @@ export function TPCView() {
                 
                 <button
                   onClick={handleBulkDeny}
-                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-gradient-to-r from-[#e3000f] to-[#b20110] hover:from-[#b20110] hover:to-[#8a0000] text-white rounded-xl text-sm font-medium transition-all shadow-lg hover:shadow-xl"
+                  className="flex-1 sm:flex-initial flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 bg-[#e3000f] hover:bg-[#b20110] text-white rounded-xl text-sm font-medium transition-all shadow-lg hover:shadow-xl"
                 >
                   <XCircle className="w-4 sm:w-5 h-4 sm:h-5" />
                   <span>Deny</span>
