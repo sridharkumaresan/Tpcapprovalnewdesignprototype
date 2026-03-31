@@ -7,8 +7,33 @@ import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 
 export function Dashboard() {
-  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [manualTimeOverride, setManualTimeOverride] = useState<'morning' | 'afternoon' | 'evening' | null>(null);
+  const [autoTimeOfDay, setAutoTimeOfDay] = useState<'morning' | 'afternoon' | 'evening'>('morning');
+
+  // Determine automatic time of day
+  React.useEffect(() => {
+    const updateTimeOfDay = () => {
+      const hour = new Date().getHours();
+      if (hour >= 5 && hour < 12) {
+        setAutoTimeOfDay('morning');
+      } else if (hour >= 12 && hour < 18) {
+        setAutoTimeOfDay('afternoon');
+      } else {
+        setAutoTimeOfDay('evening');
+      }
+    };
+    
+    updateTimeOfDay();
+    const interval = setInterval(updateTimeOfDay, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const displayTimeOfDay = manualTimeOverride || autoTimeOfDay;
+
+  const handleTimeChange = (time: 'morning' | 'afternoon' | 'evening' | null) => {
+    setManualTimeOverride(time);
+  };
 
   const tasks = [
     {
@@ -75,8 +100,15 @@ export function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
-      <SharePointHeader isVisible={!isScrolled} />
-      <HeroBanner onScrollChange={setIsScrolled} />
+      <SharePointHeader 
+        isVisible={!isScrolled} 
+        timeOfDay={displayTimeOfDay}
+        onTimeChange={handleTimeChange}
+      />
+      <HeroBanner 
+        onScrollChange={setIsScrolled}
+        displayTimeOfDay={displayTimeOfDay}
+      />
 
       {/* Main Content */}
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
@@ -124,29 +156,29 @@ export function Dashboard() {
           >
             <div 
               onClick={() => navigate('/tpc')}
-              className="group cursor-pointer relative overflow-hidden bg-gradient-to-br from-[#006de3] via-[#00aeef] to-[#0099cc] rounded-2xl p-5 sm:p-6 shadow-xl hover:shadow-2xl transition-all duration-300"
+              className="group cursor-pointer relative overflow-hidden bg-gradient-to-br from-[#006de3] via-[#00aeef] to-[#0099cc] rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE2YzAtMy4zMTQgMi42ODYtNiA2LTZzNiAyLjY4NiA2IDYtMi42ODYgNi02IDYtNi0yLjY4Ni02LTZ6bS0yNCAwYzAtMy4zMTQgMi42ODYtNiA2LTZzNiAyLjY4NiA2IDYtMi42ODYgNi02IDYtNi0yLjY4Ni02LTZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-40"></div>
               
               <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
-                    <div className="p-2 bg-white/20 backdrop-blur-sm rounded-lg">
-                      <svg className="w-5 sm:w-6 h-5 sm:h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="p-1.5 bg-white/20 backdrop-blur-sm rounded-lg">
+                      <svg className="w-4 h-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
                     </div>
                     <div>
-                      <div className="text-white/80 text-xs font-medium uppercase tracking-wider mb-0.5">Trade Pre-Clearance</div>
-                      <h3 className="text-xl sm:text-2xl font-bold text-white">
+                      <div className="text-white/80 text-xs font-medium uppercase tracking-wider">Trade Pre-Clearance</div>
+                      <h3 className="text-lg font-bold text-white">
                         Review Required
                       </h3>
                     </div>
                   </div>
-                  <p className="text-white/90 text-sm mb-2 sm:mb-3">
+                  <p className="text-white/90 text-sm mb-2">
                     You have 7 trade pre-clearance requests awaiting your approval
                   </p>
-                  <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                  <div className="flex flex-wrap items-center gap-3">
                     <div className="flex items-center gap-1.5">
                       <div className="w-1.5 h-1.5 bg-red-400 rounded-full animate-pulse"></div>
                       <span className="text-white/90 text-xs font-medium">7 Pending</span>
@@ -158,20 +190,20 @@ export function Dashboard() {
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3 sm:gap-4 self-end sm:self-auto">
+                <div className="flex items-center gap-3 self-end sm:self-auto">
                   <div className="text-right">
-                    <div className="text-3xl sm:text-4xl font-bold text-white mb-1">7</div>
+                    <div className="text-3xl font-bold text-white mb-1">7</div>
                     <div className="text-white/80 text-xs">Awaiting Review</div>
                   </div>
-                  <div className="p-2.5 sm:p-3 bg-white/20 backdrop-blur-sm rounded-xl group-hover:scale-110 group-hover:bg-white/30 transition-all duration-300">
-                    <svg className="w-5 sm:w-6 h-5 sm:h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <div className="p-2 bg-white/20 backdrop-blur-sm rounded-xl group-hover:scale-110 group-hover:bg-white/30 transition-all duration-300">
+                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                     </svg>
                   </div>
                 </div>
               </div>
 
-              <div className="absolute bottom-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-3xl"></div>
+              <div className="absolute bottom-0 right-0 w-32 h-32 bg-white/5 rounded-full blur-3xl"></div>
             </div>
           </motion.div>
 
