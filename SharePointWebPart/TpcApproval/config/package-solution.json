@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "tpc-approval-client-side-solution",
+    "id": "71abae4f-439d-42cc-8861-8af199f5d6b1",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.22.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "TpcApproval description"
+      },
+      "longDescription": {
+        "default": "TpcApproval description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "tpc-approval Feature",
+        "description": "The feature that activates elements of the tpc-approval solution.",
+        "id": "f27a9c93-ba59-4116-9956-fa9253a2e2aa",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/tpc-approval.sppkg"
+  }
+}
