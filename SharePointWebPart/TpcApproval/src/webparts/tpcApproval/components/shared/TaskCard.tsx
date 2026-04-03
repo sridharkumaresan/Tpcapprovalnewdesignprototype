@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { mergeClasses } from '@fluentui/react-components';
 import { 
-  ClockRegular, 
-  ArrowTrendingUpRegular, 
-  ArrowTrendingDownRegular, 
-  PersonRegular, 
-  BoxRegular, 
-  CheckmarkCircleRegular, 
-  DismissCircleRegular 
+  Clock24Regular, 
+  ArrowUp24Regular, 
+  ArrowDown24Regular, 
+  Person24Regular, 
+  Box24Regular, 
+  CheckmarkCircle24Regular, 
+  DismissCircle24Regular 
 } from '@fluentui/react-icons';
 import { ITpcRequest } from '../../models/ITpcRequest';
 import { useTaskCardStyles } from './TaskCard.styles';
@@ -74,7 +74,7 @@ export const TaskCard: React.FunctionComponent<ITaskCardProps> = ({ request, onC
       {Status !== 'pending' && (
         <div className={styles.statusBadgeContainer}>
           <div className={mergeClasses(styles.statusBadge, Status === 'approved' ? styles.statusBadgeApproved : styles.statusBadgeDenied)}>
-            {Status === 'approved' ? <CheckmarkCircleRegular fontSize={14} /> : <DismissCircleRegular fontSize={14} />}
+            {Status === 'approved' ? <CheckmarkCircle24Regular fontSize={14} /> : <DismissCircle24Regular fontSize={14} />}
             <span style={{ fontSize: '12px', fontWeight: 600 }}>
               {Status === 'approved' ? 'Approved' : 'Denied'}
             </span>
@@ -85,13 +85,13 @@ export const TaskCard: React.FunctionComponent<ITaskCardProps> = ({ request, onC
       {/* Header - Time & Direction */}
       <div className={styles.header}>
         <div className={mergeClasses(styles.timePill, Status === 'pending' ? styles.timePillPending : styles.timePillCompleted)}>
-          <ClockRegular fontSize={14} />
+          <Clock24Regular fontSize={14} />
           <span style={{ fontSize: '12px', fontWeight: 600 }}>{timeLeftDisplay}</span>
         </div>
 
         {Status === 'pending' && (
           <div className={mergeClasses(styles.directionPill, Direction === 'Buy' ? styles.directionBuy : styles.directionSell)}>
-            {Direction === 'Buy' ? <ArrowTrendingUpRegular fontSize={14} /> : <ArrowTrendingDownRegular fontSize={14} />}
+            {Direction === 'Buy' ? <ArrowUp24Regular fontSize={14} /> : <ArrowDown24Regular fontSize={14} />}
             <span style={{ fontSize: '12px' }}>{Direction}</span>
           </div>
         )}
@@ -100,7 +100,7 @@ export const TaskCard: React.FunctionComponent<ITaskCardProps> = ({ request, onC
       {/* Employee */}
       <div className={mergeClasses(styles.rowItem, styles.rowItemBordered)}>
         <div className={styles.iconBoxPrimary}>
-          <PersonRegular fontSize={16} />
+          <Person24Regular fontSize={16} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div className={styles.labelMini}>Employee</div>
@@ -111,7 +111,7 @@ export const TaskCard: React.FunctionComponent<ITaskCardProps> = ({ request, onC
       {/* Product */}
       <div className={styles.rowItem}>
         <div className={styles.iconBoxSecondary}>
-          <BoxRegular fontSize={16} />
+          <Box24Regular fontSize={16} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div className={styles.labelMini}>Product</div>

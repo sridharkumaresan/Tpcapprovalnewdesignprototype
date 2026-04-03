@@ -8,11 +8,11 @@ import {
   mergeClasses
 } from '@fluentui/react-components';
 import { 
-  DocumentRegular, 
-  CheckmarkRegular, 
-  InfoRegular,
-  ChevronRightRegular,
-  ChevronLeftRegular
+  Document24Regular, 
+  Checkmark24Regular, 
+  Info24Regular,
+  ChevronRight24Regular,
+  ChevronLeft24Regular
 } from '@fluentui/react-icons';
 import { useCreateModalStyles } from './CreateTpcModal.styles';
 
@@ -64,7 +64,7 @@ export const CreateTpcModal: React.FunctionComponent<ICreateTPCModalProps> = ({ 
             <div className={styles.header}>
               <div className={styles.titleSection}>
                 <div className={styles.iconBox}>
-                  <DocumentRegular fontSize={24} />
+                  <Document24Regular fontSize={24} />
                 </div>
                 <div>
                   <h2 className={styles.title}>Trade Pre-Clearance Request</h2>
@@ -82,7 +82,7 @@ export const CreateTpcModal: React.FunctionComponent<ICreateTPCModalProps> = ({ 
                         step < currentStep ? styles.stepCircleCompleted :
                         step === currentStep ? styles.stepCircleActive : styles.stepCirclePending
                       )}>
-                        {step < currentStep ? <CheckmarkRegular /> : step}
+                        {step < currentStep ? <Checkmark24Regular /> : step}
                       </div>
                       <span style={{ fontSize: '12px', marginTop: '8px', color: step <= currentStep ? '#fff' : 'rgba(255,255,255,0.5)' }}>
                         {step === 1 ? 'Account' : step === 2 ? 'Trade Details' : 'Review'}
@@ -101,7 +101,7 @@ export const CreateTpcModal: React.FunctionComponent<ICreateTPCModalProps> = ({ 
               {currentStep === 1 && (
                 <div>
                   <div className={styles.infoBox}>
-                    <InfoRegular fontSize={20} style={{ color: '#0f6cbd' }} />
+                    <Info24Regular fontSize={20} style={{ color: '#0f6cbd' }} />
                     <div style={{ color: '#0f6cbd', fontSize: '14px' }}>
                       <strong>Before you begin:</strong>
                       <ul style={{ margin: '4px 0 0 0', paddingLeft: '20px' }}>
@@ -208,7 +208,7 @@ export const CreateTpcModal: React.FunctionComponent<ICreateTPCModalProps> = ({ 
                 onClick={() => currentStep > 1 ? setCurrentStep(currentStep - 1) : onClose()}
                 style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
               >
-                {currentStep > 1 ? <><ChevronLeftRegular /> Back</> : 'Cancel'}
+                {currentStep > 1 ? <><ChevronLeft24Regular /> Back</> : 'Cancel'}
               </button>
               
               <button 
@@ -217,7 +217,7 @@ export const CreateTpcModal: React.FunctionComponent<ICreateTPCModalProps> = ({ 
                  onClick={handleNext}
               >
                  {currentStep === totalSteps ? 'Submit Request' : 'Continue'}
-                 {currentStep < totalSteps && <ChevronRightRegular />}
+                 {currentStep < totalSteps && <ChevronRight24Regular />}
               </button>
             </div>
           </div>

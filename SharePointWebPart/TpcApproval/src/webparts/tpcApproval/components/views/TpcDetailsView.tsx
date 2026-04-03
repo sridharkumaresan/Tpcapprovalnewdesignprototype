@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { makeStyles, shorthands, tokens, Button, Spinner } from '@fluentui/react-components';
-import { ChevronLeftRegular, CheckmarkCircleRegular, DismissCircleRegular } from '@fluentui/react-icons';
+import { ChevronLeft24Regular, CheckmarkCircle24Regular, DismissCircle24Regular } from '@fluentui/react-icons';
 import { useTpcAppContext } from '../../context/TpcAppContext';
 import { ITpcRequest } from '../../models/ITpcRequest';
 
@@ -38,7 +38,7 @@ const useStyles = makeStyles({
   },
   titleGroup: {
     marginBottom: '24px',
-    ...shorthands.paddingBottom('24px'),
+    paddingBottom: '24px',
     borderBottomWidth: '1px',
     borderBottomStyle: 'solid',
     borderBottomColor: tokens.colorNeutralStroke2,
@@ -139,7 +139,7 @@ export const TpcDetailsView: React.FunctionComponent<ITpcDetailsViewProps> = ({ 
   if (!request) {
     return (
       <div className={styles.container}>
-        <button onClick={onBack} className={styles.backButton}><ChevronLeftRegular /> Back</button>
+        <button onClick={onBack} className={styles.backButton}><ChevronLeft24Regular /> Back</button>
         <h2>Request not found</h2>
       </div>
     );
@@ -149,7 +149,7 @@ export const TpcDetailsView: React.FunctionComponent<ITpcDetailsViewProps> = ({ 
     <div className={styles.container}>
       <div className={styles.header}>
         <button onClick={onBack} className={styles.backButton}>
-          <ChevronLeftRegular /> Dashboard
+          <ChevronLeft24Regular /> Dashboard
         </button>
       </div>
 
@@ -200,7 +200,7 @@ export const TpcDetailsView: React.FunctionComponent<ITpcDetailsViewProps> = ({ 
               size="large" 
               className={styles.denyBtn}
               onClick={() => handleAction('denied')}
-              icon={<DismissCircleRegular />}
+              icon={<DismissCircle24Regular />}
               disabled={isProcessing}
             >
               Deny
@@ -209,7 +209,7 @@ export const TpcDetailsView: React.FunctionComponent<ITpcDetailsViewProps> = ({ 
               size="large" 
               className={styles.approveBtn}
               onClick={() => handleAction('approved')}
-              icon={<CheckmarkCircleRegular />}
+              icon={<CheckmarkCircle24Regular />}
               disabled={isProcessing}
             >
               Approve

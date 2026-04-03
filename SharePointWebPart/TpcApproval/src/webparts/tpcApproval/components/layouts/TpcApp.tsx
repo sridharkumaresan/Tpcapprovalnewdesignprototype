@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { FluentProvider, webLightTheme, Button } from '@fluentui/react-components';
-import { TpcAppContext } from '../context/TpcAppContext';
-import { ITpcService } from '../services/ITpcService';
-import { IUserContext } from '../models/ITpcRequest';
-import { DashboardView } from './views/DashboardView';
-import { TpcDetailsView } from './views/TpcDetailsView';
-import { CreateTpcModal } from './forms/CreateTpcModal';
+import { TpcAppContext } from '../../context/TpcAppContext';
+import { ITpcService } from '../../services/ITpcService';
+import { IUserContext } from '../../models/ITpcRequest';
+import { DashboardView } from '../views/DashboardView';
+import { TpcDetailsView } from '../views/TpcDetailsView';
+import { CreateTpcModal } from '../forms/CreateTpcModal';
 
 export interface ITpcAppProps {
   appService: ITpcService;
