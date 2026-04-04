@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { mergeClasses } from '@fluentui/react-components';
+import { motion } from 'framer-motion';
 import { 
   Clock24Regular, 
   ArrowUp24Regular, 
@@ -57,16 +58,17 @@ export const TaskCard: React.FunctionComponent<ITaskCardProps> = ({ request, onC
   );
 
   return (
-    <div 
+    <motion.div 
       className={rootClass} 
-      onClick={() => onClick && onClick(Id)}
+      onClick={() => { if (onClick) onClick(Id); }}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => {
+      onKeyDown={(e: React.KeyboardEvent<HTMLDivElement>) => {
         if (e.key === 'Enter' || e.key === ' ') {
-          onClick && onClick(Id);
+          if (onClick) onClick(Id);
         }
       }}
+      whileHover={{ y: -4, transition: { duration: 0.2 } }}
     >
       <div className={gradientClass} />
 
@@ -124,6 +126,6 @@ export const TaskCard: React.FunctionComponent<ITaskCardProps> = ({ request, onC
         <span className={styles.labelMini} style={{ marginBottom: 0 }}>Quantity</span>
         <span className={styles.quantityValue}>{Quantity.toLocaleString()}</span>
       </div>
-    </div>
+    </motion.div>
   );
 };

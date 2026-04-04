@@ -58,9 +58,10 @@ const useStyles = makeStyles({
 
 export interface IDashboardViewProps {
   onNavigateToRequest: (requestId: number) => void;
+  onCreateTpcClick: () => void;
 }
 
-export const DashboardView: React.FunctionComponent<IDashboardViewProps> = ({ onNavigateToRequest }) => {
+export const DashboardView: React.FunctionComponent<IDashboardViewProps> = ({ onNavigateToRequest, onCreateTpcClick }) => {
   const styles = useStyles();
   const { appService, currentUser } = useTpcAppContext();
   const [requests, setRequests] = React.useState<ITpcRequest[]>([]);
@@ -81,7 +82,7 @@ export const DashboardView: React.FunctionComponent<IDashboardViewProps> = ({ on
       }
     };
     
-    fetchData();
+    void fetchData();
   }, [appService, currentUser]);
 
   const pendingRequests = requests.filter(r => r.Status === 'pending');
@@ -89,7 +90,10 @@ export const DashboardView: React.FunctionComponent<IDashboardViewProps> = ({ on
 
   return (
     <div className={styles.container}>
-      <HeroBanner />
+      <HeroBanner 
+        currentUserDisplayName={currentUser.displayName}
+        onCreateTpcClick={onCreateTpcClick} 
+      />
       
       <div className={styles.content}>
         <div className={styles.header}>

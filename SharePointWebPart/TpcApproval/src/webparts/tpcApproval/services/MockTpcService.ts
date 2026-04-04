@@ -1,5 +1,5 @@
-import { ITpcRequest, ITpcService } from './ITpcService';
-import { ITpcRequest as ITpcRequestModel } from '../models/ITpcRequest';
+import { ITpcService } from './ITpcService';
+import { ITpcRequest as ITpcRequestModel, ITpcFormData } from '../models/ITpcRequest';
 
 // Use strict typing from the model
 type TpcData = ITpcRequestModel;
@@ -150,5 +150,32 @@ export class MockTpcService implements ITpcService {
 
     this.mockData = [newRequest, ...this.mockData];
     return { ...newRequest };
+  }
+
+  public async getFormData(): Promise<ITpcFormData> {
+    await this.delay(400);
+    return {
+      productTypes: [
+        'Equity-Common',
+        'Debt',
+        'Convertible Bonds',
+        'Structured Note',
+        'Option',
+        'Certificates'
+      ],
+      orderTypes: [
+        'Day Order',
+        'GTC',
+        'Rights Issue',
+        'Tender Offers'
+      ],
+      mockProducts: [
+        { ticker: 'AAPL', name: 'APPLE INC' },
+        { ticker: 'MSFT', name: 'MICROSOFT CORP' },
+        { ticker: 'GOOGL', name: 'ALPHABET INC' },
+        { ticker: 'AMZN', name: 'AMAZON.COM INC' },
+        { ticker: 'TSLA', name: 'TESLA INC' }
+      ]
+    };
   }
 }

@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { 
-  Dialog, 
-  DialogTrigger, 
-  DialogSurface, 
-  DialogBody, 
-  DialogContent,
-  mergeClasses
+  OverlayDrawer, 
+  DrawerBody, 
+  mergeClasses,
+  Button
 } from '@fluentui/react-components';
+import { ITpcFormData } from '../../models/ITpcRequest';
 import { 
   Document24Regular, 
   Checkmark24Regular, 
@@ -14,17 +13,16 @@ import {
   ChevronRight24Regular,
   ChevronLeft24Regular
 } from '@fluentui/react-icons';
-import { useCreateModalStyles } from './CreateTpcModal.styles';
+import { useCreateModalStyles } from './CreateTpcDrawer.styles';
 
-export interface ICreateTPCModalProps {
+export interface ICreateTPCDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: any) => void;
+  formConfig: ITpcFormData | null;
 }
 
-const productTypes = ['Equity-Common', 'Debt', 'Convertible Bonds', 'Structured Note', 'Option', 'Certificates'];
-
-export const CreateTpcModal: React.FunctionComponent<ICreateTPCModalProps> = ({ isOpen, onClose, onSubmit }) => {
+export const CreateTpcDrawer: React.FunctionComponent<ICreateTPCDrawerProps> = ({ isOpen, onClose, onSubmit, formConfig }) => {
   const styles = useCreateModalStyles();
   const [currentStep, setCurrentStep] = React.useState(1);
   const [formData, setFormData] = React.useState({
@@ -54,11 +52,18 @@ export const CreateTpcModal: React.FunctionComponent<ICreateTPCModalProps> = ({ 
     return true;
   };
 
-  // We are using Fluent UI Dialog, but we control the open state via Props
+  // Generate dynamic product types or fallback to empty
+  const productTypes = formConfig?.productTypes || [];
+  const orderTypes = formConfig?.orderTypes || [];
+
   return (
-    <Dialog open={isOpen} onOpenChange={(e, data) => !data.open && onClose()}>
-      <DialogSurface style={{ padding: 0, maxWidth: '600px', borderRadius: '16px', overflow: 'hidden' }}>
-        <DialogBody style={{ padding: 0 }}>
+    <OverlayDrawer 
+      position="end"
+      open={isOpen} 
+      onOpenChange={(e, data) => !data.open && onClose()}
+      style={{ width: '600px', maxWidth: '100vw' }}
+    >
+        <DrawerBody style={{ padding: 0 }}>
           <div className={styles.container}>
             {/* Header */}
             <div className={styles.header}>
@@ -97,7 +102,7 @@ export const CreateTpcModal: React.FunctionComponent<ICreateTPCModalProps> = ({ 
             </div>
 
             {/* Content */}
-            <DialogContent className={styles.content}>
+            <div className={styles.content} style={{ flex: 1, overflowY: 'auto' }}>
               {currentStep === 1 && (
                 <div>
                   <div className={styles.infoBox}>
@@ -126,7 +131,7 @@ export const CreateTpcModal: React.FunctionComponent<ICreateTPCModalProps> = ({ 
                   <div className={styles.formGroup}>
                     <label className={styles.label}>Product Type *</label>
                     <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-                      {productTypes.slice(0, 4).map(type => (
+                      {productTypes.map(type => (
                         <button 
                           key={type}
                           className={mergeClasses(styles.gridCardButton, formData.productType === type && styles.gridCardActive)}
@@ -156,7 +161,7 @@ export const CreateTpcModal: React.FunctionComponent<ICreateTPCModalProps> = ({ 
                         onChange={e => setFormData({...formData, orderType: e.target.value})}
                       >
                          <option value="">Select</option>
-                         <option value="Day Order">Day Order</option>
+                         {orderTypes.map(ot => <option key={ot} value={ot}>{ot}</option>)}
                       </select>
                     </div>
 
@@ -199,7 +204,7 @@ export const CreateTpcModal: React.FunctionComponent<ICreateTPCModalProps> = ({ 
                   </div>
                 </div>
               )}
-            </DialogContent>
+            </div>
 
             {/* Footer */}
             <div className={styles.footer}>
@@ -221,8 +226,7 @@ export const CreateTpcModal: React.FunctionComponent<ICreateTPCModalProps> = ({ 
               </button>
             </div>
           </div>
-        </DialogBody>
-      </DialogSurface>
-    </Dialog>
+        </DrawerBody>
+    </OverlayDrawer>
   );
 };

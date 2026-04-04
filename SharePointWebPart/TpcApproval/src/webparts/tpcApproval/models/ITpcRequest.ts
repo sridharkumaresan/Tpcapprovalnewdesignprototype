@@ -25,3 +25,14 @@ export interface IUserContext {
   displayName: string;
   role: 'Employee' | 'Approver';
 }
+
+export interface ITpcProduct {
+  ticker: string;
+  name: string;
+}
+
+export interface ITpcFormData {
+  productTypes: string[];
+  orderTypes: string[];
+  mockProducts: ITpcProduct[];
+}

@@ -4,8 +4,9 @@ import { TpcAppContext } from '../../context/TpcAppContext';
 import { ITpcService } from '../../services/ITpcService';
 import { IUserContext } from '../../models/ITpcRequest';
 import { DashboardView } from '../views/DashboardView';
-import { TpcDetailsView } from '../views/TpcDetailsView';
-import { CreateTpcModal } from '../forms/CreateTpcModal';
+import { TpcDetailsDrawer } from '../views/TpcDetailsDrawer';
+import { CreateTpcDrawer } from '../forms/CreateTpcDrawer';
+import { ITpcFormData } from '../../models/ITpcRequest';
 
 export interface ITpcAppProps {
   appService: ITpcService;
@@ -13,7 +14,6 @@ export interface ITpcAppProps {
 
 export const TpcApp: React.FunctionComponent<ITpcAppProps> = ({ appService }) => {
   // State for Simulated Routing
-  const [currentView, setCurrentView] = React.useState<'dashboard' | 'details'>('dashboard');
   const [selectedRequestId, setSelectedRequestId] = React.useState<number | null>(null);
 
   // State for Mock Users (so we can test both views locally)
@@ -22,16 +22,23 @@ export const TpcApp: React.FunctionComponent<ITpcAppProps> = ({ appService }) =>
   
   const [currentUser, setCurrentUser] = React.useState<IUserContext>(employeeUser);
   const [isCreateModalOpen, setIsCreateModalOpen] = React.useState(false);
+  const [formConfig, setFormConfig] = React.useState<ITpcFormData | null>(null);
 
-  // Handlers for Views
-  const handleNavigateToDetails = (id: number) => {
-    setSelectedRequestId(id);
-    setCurrentView('details');
-  };
+  // Load Form Config
+  React.useEffect(() => {
+    const loadConfig = async () => {
+      try {
+        const config = await appService.getFormData();
+        setFormConfig(config);
+      } catch (e) {
+        console.error("Failed to load form definitions", e);
+      }
+    };
+    void loadConfig();
+  }, [appService]);
 
   const handleNavigateToDashboard = () => {
     setSelectedRequestId(null);
-    setCurrentView('dashboard');
   };
 
   const handleCreateRequest = async (formData: any) => {
@@ -44,8 +51,9 @@ export const TpcApp: React.FunctionComponent<ITpcAppProps> = ({ appService }) =>
       ProductName: formData.productName,
     });
     // Trigger a re-render of Dashboard by toggling view (hacky but works for mock state)
-    setCurrentView('details');
-    setTimeout(() => setCurrentView('dashboard'), 10);
+    // We just close the modal and trick react if needed, or better, appService might emit, 
+    // but just closing the drawer is enough for now.
+    setIsCreateModalOpen(false);
   };
 
   return (
@@ -59,25 +67,25 @@ export const TpcApp: React.FunctionComponent<ITpcAppProps> = ({ appService }) =>
             <Button size="small" appearance="primary" onClick={() => setCurrentUser(currentUser.role === 'Employee' ? approverUser : employeeUser)}>
               Simulate as: {currentUser.role}
             </Button>
-            {currentUser.role === 'Employee' && currentView === 'dashboard' && (
+            {currentUser.role === 'Employee' && (
               <Button size="small" onClick={() => setIsCreateModalOpen(true)}>+ New TPC</Button>
             )}
           </div>
 
-          {/* Main View Router */}
-          {currentView === 'dashboard' && (
-            <DashboardView onNavigateToRequest={handleNavigateToDetails} />
+          {/* Main Dashboard is always rendered beneath overlays */}
+          <DashboardView onNavigateToRequest={setSelectedRequestId} onCreateTpcClick={() => setIsCreateModalOpen(true)} />
+
+          {/* Detailed Request Overlay */}
+          {selectedRequestId !== null && (
+             <TpcDetailsDrawer requestId={selectedRequestId} onBack={handleNavigateToDashboard} />
           )}
 
-          {currentView === 'details' && selectedRequestId !== null && (
-             <TpcDetailsView requestId={selectedRequestId} onBack={handleNavigateToDashboard} />
-          )}
-
-          {/* Modals */}
-          <CreateTpcModal 
+          {/* Create Modal Overlay */}
+          <CreateTpcDrawer 
             isOpen={isCreateModalOpen} 
             onClose={() => setIsCreateModalOpen(false)} 
             onSubmit={handleCreateRequest} 
+            formConfig={formConfig}
           />
         </div>
       </TpcAppContext.Provider>

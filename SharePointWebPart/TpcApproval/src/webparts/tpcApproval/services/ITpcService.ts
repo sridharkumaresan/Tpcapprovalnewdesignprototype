@@ -1,4 +1,4 @@
-import { ITpcRequest } from '../models/ITpcRequest';
+import { ITpcRequest, ITpcFormData } from '../models/ITpcRequest';
 
 export interface ITpcService {
   /**
@@ -15,4 +15,9 @@ export interface ITpcService {
    * Creates a new TPC Request (Employee view action)
    */
   createRequest(request: Partial<ITpcRequest>): Promise<ITpcRequest>;
+
+  /**
+   * Fetches dropdown and form configuration data
+   */
+  getFormData(): Promise<ITpcFormData>;
 }
