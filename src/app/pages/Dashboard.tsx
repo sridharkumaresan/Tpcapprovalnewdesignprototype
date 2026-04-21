@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
 
 export function Dashboard() {
-  const navigate = useNavigate();
   const [isScrolled, setIsScrolled] = useState(false);
   const [manualTimeOverride, setManualTimeOverride] = useState<'morning' | 'afternoon' | 'evening' | null>(null);
   const [autoTimeOfDay, setAutoTimeOfDay] = useState<'morning' | 'afternoon' | 'evening'>('morning');
@@ -24,7 +23,7 @@ export function Dashboard() {
         setAutoTimeOfDay('evening');
       }
     };
-
+    
     updateTimeOfDay();
     const interval = setInterval(updateTimeOfDay, 60000);
     return () => clearInterval(interval);
@@ -101,12 +100,12 @@ export function Dashboard() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50/30 to-gray-50">
-      <SharePointHeader
-        isVisible={!isScrolled}
+      <SharePointHeader 
+        isVisible={!isScrolled} 
         timeOfDay={displayTimeOfDay}
         onTimeChange={handleTimeChange}
       />
-      <HeroBanner
+      <HeroBanner 
         onScrollChange={setIsScrolled}
         displayTimeOfDay={displayTimeOfDay}
       />
@@ -135,7 +134,7 @@ export function Dashboard() {
                   className="w-full sm:w-64 pl-9 sm:pl-10 pr-4 py-2 sm:py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#00aeef] focus:border-transparent bg-white"
                 />
               </div>
-
+              
               <button className="flex items-center gap-2 px-3 sm:px-4 py-2 sm:py-2.5 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors bg-white">
                 <Filter className="w-4 sm:w-5 h-4 sm:h-5 text-gray-600" />
                 <span className="font-medium text-gray-700 text-sm hidden sm:inline">Filter</span>
@@ -155,12 +154,12 @@ export function Dashboard() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
           >
-            <div
+            <div 
               onClick={() => navigate('/tpc')}
               className="group cursor-pointer relative overflow-hidden bg-gradient-to-br from-[#006de3] via-[#00aeef] to-[#0099cc] rounded-xl p-4 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTM2IDE2YzAtMy4zMTQgMi42ODYtNiA2LTZzNiAyLjY4NiA2IDYtMi42ODYgNi02IDYtNi0yLjY4Ni02LTZ6bS0yNCAwYzAtMy4zMTQgMi42ODYtNiA2LTZzNiAyLjY4NiA2IDYtMi42ODYgNi02IDYtNi0yLjY4Ni02LTZ6Ii8+PC9nPjwvZz48L3N2Zz4=')] opacity-40"></div>
-
+              
               <div className="relative z-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-2">

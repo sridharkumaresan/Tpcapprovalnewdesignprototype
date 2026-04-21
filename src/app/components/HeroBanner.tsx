@@ -502,11 +502,9 @@ export function HeroBanner({ onScrollChange, displayTimeOfDay }: HeroBannerProps
   }, []); // Empty dependency array - only set up once
 
   return (
-    <div className={`w-full sticky top-[45px] z-50 transition-all duration-500 ease-in-out ${
+    <div className={`w-full sticky top-[45px] z-50 transition-all duration-500 ease-in-out bg-gradient-to-br from-[#00AEEF] to-[#005DB5] ${
       isScrolled ? 'shadow-lg' : ''
-    }`} 
-    style={{ background: 'linear-gradient(225deg, #ffff98 1.11%, #cbeeA9 10%, #95DDBB 22%, #68CFCB 34%, #42C3D8 45%, #25B9E2 56%, #10B2E9 68%, #04AFED 79%, #00AEEF 90%)' }}
-    ref={bannerRef}>
+    }`} ref={bannerRef}>
       {!isScrolled ? (
         <div className="overflow-hidden relative">
           {/* Animated SVG Swirl Background - Full Width */}

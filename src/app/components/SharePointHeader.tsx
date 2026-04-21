@@ -1,5 +1,6 @@
 import React from 'react';
 import { Home, Grid, Users, Settings, Bell, Search, HelpCircle, ChevronDown, Sunrise, Sun, Moon } from 'lucide-react';
+import { useNavigate, useLocation } from 'react-router';
 
 interface SharePointHeaderProps {
   isVisible?: boolean;
@@ -8,6 +9,9 @@ interface SharePointHeaderProps {
 }
 
 export function SharePointHeader({ isVisible = true, timeOfDay = 'morning', onTimeChange }: SharePointHeaderProps) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   return (
     <>
       {/* Top Header - Dark Blue */}
@@ -111,8 +115,25 @@ export function SharePointHeader({ isVisible = true, timeOfDay = 'morning', onTi
             
             {/* Hide navigation on small/medium screens */}
             <div className="hidden lg:flex items-center gap-1">
-              <button className="px-3 xl:px-4 py-2 text-sm font-medium text-gray-900 hover:bg-gray-100 rounded transition-colors">
+              <button
+                onClick={() => navigate('/')}
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded transition-colors ${
+                  location.pathname === '/'
+                    ? 'text-gray-900 bg-gray-100'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
                 Home
+              </button>
+              <button
+                onClick={() => navigate('/hue')}
+                className={`px-3 xl:px-4 py-2 text-sm font-medium rounded transition-colors ${
+                  location.pathname === '/hue'
+                    ? 'text-gray-900 bg-gray-100'
+                    : 'text-gray-700 hover:bg-gray-100'
+                }`}
+              >
+                HUE
               </button>
               <button className="px-3 xl:px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded transition-colors">
                 News & Updates
